@@ -1,0 +1,9 @@
+class Flower:
+    def __init__(self, name, price_per_unit, available_stock):
+        self.name = name
+        self.price_per_unit = price_per_unit
+        self.available_stock = available_stock
+
+    def update_stock(self, quantity):
+        if quantity > self.available_stock:
+            print("Not enough stock available
