@@ -1,0 +1,146 @@
+class Flower:
+    def __init__(self, name, price_per_unit, available_stock):
+        self.name = name
+        self.price_per_unit = price_per_unit
+        self.available_stock = available_stock
+
+    def update_stock(self, quantity):
+        if quantity > self.available_stock:
+            print("Not enough stock available.")
+        else:
+            self.available_stock -= quantity
+
+    def __str__(self):
+        return f"{self.name}: ${self.price_per_unit} (Stock: {self.available_stock})"
+
+
+class Bouquet:
+    def __init__(self, name, flowers):
+        self.name = name
+        self.flowers = flowers  # dictionary of Flower objects and their quantities
+        self.total_price = self.calculate_price()
+
+    def calculate_price(self):
+        total = 0
+        for flower, quantity in self.flowers.items():
+            total += flower.price_per_unit * quantity
+        return total
+
+    def display_bouquet(self):
+        print(f"Bouquet Name: {self.name}")
+        print("Flowers included:")
+        for flower, quantity in self.flowers.items():
+            print(f"  {flower.name} - {quantity} stems")
+        print(f"Total Price: ${self.total_price}\n")
+
+
+class GiftCard:
+    def __init__(self, card_code, balance):
+        self.card_code = card_code
+        self.balance = balance
+
+    def redeem(self, amount):
+        if amount <= self.balance:
+            self.balance -= amount
+            print(f"Gift card redeemed: ${amount}. Remaining balance: ${self.balance}")
+            return amount
+        else:
+            print("Insufficient balance on the gift card.")
+            return 0
+
+    def __str__(self):
+        return f"Gift Card Code: {self.card_code}, Balance: ${self.balance}"
+
+
+class BouquetManager:
+    def __init__(self):
+        self.bouquets = []
+        self.flowers_inventory = []
+        self.gift_cards = []
+
+    def add_flower(self, flower):
+        self.flowers_inventory.append(flower)
+
+    def create_bouquet(self, name, flowers):
+        bouquet = Bouquet(name, flowers)
+        self.bouquets.append(bouquet)
+
+    def display_bouquets(self):
+        if not self.bouquets:
+            print("No bouquets available.\n")
+        for bouquet in self.bouquets:
+            bouquet.display_bouquet()
+
+    def display_inventory(self):
+        if not self.flowers_inventory:
+            print("No flowers available in inventory.\n")
+        for flower in self.flowers_inventory:
+            print(flower)
+
+    def create_gift_card(self, card_code, balance):
+        gift_card = GiftCard(card_code, balance)
+        self.gift_cards.append(gift_card)
+
+    def display_gift_cards(self):
+        if not self.gift_cards:
+            print("No gift cards available.\n")
+        for card in self.gift_cards:
+            print(card)
+
+
+def main():
+    # Initialize bouquet manager
+    bouquet_manager = BouquetManager()
+
+    # Add flowers to inventory
+    rose = Flower("Rose", 2.5, 100)
+    tulip = Flower("Tulip", 3.0, 50)
+    lily = Flower("Lily", 4.0, 75)
+
+    bouquet_manager.add_flower(rose)
+    bouquet_manager.add_flower(tulip)
+    bouquet_manager.add_flower(lily)
+
+    # Display flowers in inventory
+    print("Flowers in Inventory:")
+    bouquet_manager.display_inventory()
+
+    # Create a bouquet
+    bouquet_flowers = {
+        rose: 10,  # 10 roses
+        tulip: 5   # 5 tulips
+    }
+    bouquet_manager.create_bouquet("Spring Joy", bouquet_flowers)
+
+    # Display bouquets
+    print("\nAvailable Bouquets:")
+    bouquet_manager.display_bouquets()
+
+    # Updating flower stock after creating a bouquet
+    rose.update_stock(10)
+    tulip.update_stock(5)
+
+    # Display updated inventory
+    print("\nUpdated Inventory after Bouquet Creation:")
+    bouquet_manager.display_inventory()
+
+    # Create and display gift cards
+    bouquet_manager.create_gift_card("GC1001", 50.0)
+    bouquet_manager.create_gift_card("GC1002", 30.0)
+    print("\nGift Cards:")
+    bouquet_manager.display_gift_cards()
+
+    # Redeem a gift card for an order
+    print("\nUsing Gift Card GC1001 to pay for a bouquet:")
+    card_to_redeem = bouquet_manager.gift_cards[0]
+    bouquet_price = bouquet_manager.bouquets[0].total_price
+    card_to_redeem.redeem(bouquet_price)
+
+    # Display updated gift cards
+    print("\nUpdated Gift Cards:")
+    bouquet_manager.display_gift_cards()
+
+
+if __name__ == "__main__":
+    main()
+
